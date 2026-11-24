@@ -1,10 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Duyan.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+
 
 namespace Duyan.Controllers
 {
     public class UserController : Controller
     {
+
+        private readonly ApplicationDbContext _context;
+
+        public UserController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET: UserController
         public ActionResult Index()
         {
