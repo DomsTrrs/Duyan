@@ -17,10 +17,17 @@ namespace Duyan.Controllers
             {
                 return View(new LoginViewModel());
             }
-        
-    
 
-    public ActionResult Index()
+        public IActionResult Sign_Up()
+        {
+            return View(new SignUpViewModel());
+        }
+
+
+
+
+
+        public ActionResult Index()
         {
             return View();
         }

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace Duyan.Models
 {
     public class User
     {
+        // Generated automatically by the database
         [Key]
-        public required int User_id { get; set; }
+        public int User_id { get; set; }
 
         public required int Hotel_id { get; set; }
 
@@ -18,8 +18,10 @@ namespace Duyan.Models
 
         public required string role { get; set; }
 
-        public required bool is_active { get; set; }
+        // Automatic: new users are active by default
+        public bool is_active { get; set; } = true;
 
-        public required DateTime created_at { get; set; }
+        // Automatic: set to the current time when the user is created
+        public DateTime created_at { get; set; } = DateTime.UtcNow;
     }
 }
