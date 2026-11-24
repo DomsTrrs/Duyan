@@ -40,18 +40,32 @@ namespace Duyan.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(User user)
         {
-            try
+            // Check if email already exists
+            var existingUser = await _context.User
+                .FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            if (existingUser != null)
             {
+                ModelState.AddModelError("Email", "Email already exists.");
+                return View(user);
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Hash password using BCrypt
+                user.Password_hash = BCrypt.Net.BCrypt.HashPassword(user.Password_hash);
+
+                _context.User.Add(user);
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
-        }
 
+            return View(user);
+        }
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -63,6 +77,18 @@ namespace Duyan.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(User user)
         {
+            // Check if email belongs to another user
+            var existingUser = await _context.User
+                .FirstOrDefaultAsync(u =>
+                    u.Email == user.Email &&
+                    u.User_id != user.User_id);
+
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Email already exists.");
+                return View(user);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.User.Update(user);
@@ -75,20 +101,15 @@ namespace Duyan.Controllers
             return View(user);
         }
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
+    
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, User user)
+        public async Task<IActionResult> Delete(int id)
         {
-            var student = await _context.User.FindAsync(id);
+            var user = await _context.User.FindAsync(id);
 
-            if (student != null)
+            if (user != null)
             {
                 _context.User.Remove(user);
 
