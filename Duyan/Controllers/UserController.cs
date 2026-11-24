@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Duyan.Models;
 
 
 
@@ -17,9 +18,11 @@ namespace Duyan.Controllers
             _context = context;
         }
         // GET: UserController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _context.User.ToListAsync();
+
+            return View(user);
         }
 
         // GET: UserController/Details/5
@@ -58,16 +61,18 @@ namespace Duyan.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(User user)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _context.User.Update(user);
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(user);
         }
 
         // GET: UserController/Delete/5
@@ -79,16 +84,18 @@ namespace Duyan.Controllers
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id, User user)
         {
-            try
+            var student = await _context.User.FindAsync(id);
+
+            if (student != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.User.Remove(user);
+
+                await _context.SaveChangesAsync();
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
