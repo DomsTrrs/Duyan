@@ -1,28 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Duyan.Data;
 using Duyan.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: AccountController
-        
-        
-        // Controllers/AccountController.cs
 
+        private readonly ApplicationDbContext _context;
 
-    
-            public IActionResult Login()
-            {
-                return View(new LoginViewModel());
-            }
-        
-    
-
-    public ActionResult Index()
+        public AccountController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+        // GET: AccountController
+
+        public IActionResult Login()
+        {
+            return View(new LoginViewModel());
         }
 
         // GET: AccountController/Details/5
@@ -92,6 +89,28 @@ namespace Duyan.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            var user = await _context.User
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null || user.Password_hash != password)
+            {
+                ViewBag.Error = "Invalid email or password.";
+                return View(new LoginViewModel());
+            }
+
+            if (!user.is_active)
+            {
+                ViewBag.Error = "Your account is inactive.";
+                return View(new LoginViewModel());
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
