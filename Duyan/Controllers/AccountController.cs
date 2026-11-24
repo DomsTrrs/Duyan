@@ -1,12 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Duyan.Models;
 
 namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
         // GET: AccountController
-        public ActionResult Index()
+        
+        
+        // Controllers/AccountController.cs
+
+
+    
+            public IActionResult Login()
+            {
+                return View(new LoginViewModel());
+            }
+        
+    
+
+    public ActionResult Index()
         {
             return View();
         }
