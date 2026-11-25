@@ -28,7 +28,7 @@ namespace Duyan.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View("ComingSoon", "Registration Requests");
+            return View();
         }
 
         // Hotels
@@ -42,7 +42,7 @@ namespace Duyan.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View("ComingSoon", "Hotels");
+            return View();
         }
 
         // Hotel Administrators
@@ -56,7 +56,7 @@ namespace Duyan.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View("ComingSoon", "Hotel Administrators");
+            return View();
         }
 
         // Activity Logs
@@ -70,7 +70,7 @@ namespace Duyan.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View("ComingSoon", "Activity Logs");
+            return View();
         }
     }
 }

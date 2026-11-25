@@ -1,136 +1,186 @@
 ﻿@{
     var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>@ViewData["Title"] - Duyan Platform Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet" />
+
     <style>
-            :root {
-                --duyan-navy: #1F3A5F;
-                --duyan-navy-dark: #162B47;
-            }
+        :root {
+            --duyan-navy: #1F3A5F;
+            --duyan-navy-dark: #162B47;
+        }
 
-            body {
-                background: #F4F6F9;
-            }
+        body {
+            background: #F4F6F9;
+        }
 
-            .pa-sidebar {
-                width: 250px;
-                min-height: 100vh;
-                background: var(--duyan-navy);
-            }
+        .pa-sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: var(--duyan-navy);
+        }
 
-            .pa-brand {
+        .pa-brand {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: .5px;
+            font-size: 1.35rem;
+        }
+
+        .pa-sidebar .nav-link {
+            color: #C9D6E8;
+            border-radius: .4rem;
+            padding: .55rem .85rem;
+        }
+
+            .pa-sidebar .nav-link:hover {
+                background: var(--duyan-navy-dark);
                 color: #fff;
-                font-weight: 700;
-                letter-spacing: .5px;
-                font-size: 1.35rem;
             }
 
-            .pa-sidebar .nav-link {
-                color: #C9D6E8;
-                border-radius: .4rem;
-                padding: .55rem .85rem;
-            }
-
-                .pa-sidebar .nav-link:hover {
-                    background: var(--duyan-navy-dark);
-                    color: #fff;
-                }
-
-                .pa-sidebar .nav-link.active {
-                    background: #fff;
-                    color: var(--duyan-navy);
-                    font-weight: 600;
-                }
-
-                .pa-sidebar .nav-link.disabled {
-                    opacity: .5;
-                }
-
-            .pa-content {
-                min-width: 0;
-            }
-
-            .page-title {
+            .pa-sidebar .nav-link.active {
+                background: #fff;
                 color: var(--duyan-navy);
-                font-weight: 700;
+                font-weight: 600;
             }
 
-            .stat-value {
-                font-size: 1.9rem;
-                font-weight: 700;
-                color: var(--duyan-navy);
-                line-height: 1.1;
+            .pa-sidebar .nav-link.disabled {
+                opacity: .5;
             }
 
-            @@media (max-width: 991.98px) {
-                .pa-sidebar {
-                    width: 100%;
-                    min-height: auto;
-                }
+        .pa-content {
+            min-width: 0;
+        }
+
+        .page-title {
+            color: var(--duyan-navy);
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--duyan-navy);
+            line-height: 1.1;
+        }
+
+        /* Navigation page content panel */
+        .admin-page-panel {
+            border: 2px solid #292d32;
+            border-radius: 7px;
+            min-height: 440px;
+            padding: 20px;
+            background: white;
+        }
+
+            .admin-page-panel h2 {
+                font-size: 28px;
+                font-weight: 400;
+                margin-bottom: 20px;
+                color: #212529;
             }
+
+        @@media (max-width: 991.98px) {
+            .pa-sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="d-lg-flex">
+
         <aside class="pa-sidebar p-3 flex-shrink-0">
+
             <div class="pa-brand mb-1">DUYAN</div>
-            <div class="small text-white-50 mb-4">Platform Administration</div>
+
+            <div class="small text-white-50 mb-4">
+                Platform Administration
+            </div>
 
             <nav class="nav flex-column gap-1">
-                <a class="nav-link @(action == "Dashboard" ? "active" : "")" asp-controller="PlatformAdmin" asp-action="Dashboard">
+
+                <!-- Dashboard -->
+                <a class="nav-link @(action == "Dashboard" ? "active" : "")"
+                   asp-controller="PlatformAdmin"
+                   asp-action="Dashboard">
                     <i class="bi bi-speedometer2 me-2"></i>Dashboard
                 </a>
 
-                @* Not built yet - enabled one step at a time *@
                 <!-- Registration Requests -->
                 <a class="nav-link @(action == "HotelApplications" ? "active" : "")"
                    asp-controller="PlatformAdmin"
                    asp-action="HotelApplications">
                     <i class="bi bi-inbox me-2"></i>Registration Requests
                 </a>
+
                 <!-- Hotels -->
                 <a class="nav-link @(action == "RegisteredHotels" ? "active" : "")"
                    asp-controller="PlatformAdmin"
                    asp-action="RegisteredHotels">
                     <i class="bi bi-building me-2"></i>Hotels
                 </a>
+
                 <!-- Hotel Administrators -->
                 <a class="nav-link @(action == "HotelAdministrators" ? "active" : "")"
                    asp-controller="PlatformAdmin"
                    asp-action="HotelAdministrators">
                     <i class="bi bi-people me-2"></i>Hotel Administrators
                 </a>
-                <a class="nav-link disabled" href="#" aria-disabled="true"><i class="bi bi-bar-chart me-2"></i>Reports &amp; Analytics</a>
+
                 <!-- Activity Logs -->
                 <a class="nav-link @(action == "ActivityLogs" ? "active" : "")"
                    asp-controller="PlatformAdmin"
                    asp-action="ActivityLogs">
                     <i class="bi bi-journal-text me-2"></i>Activity Logs
                 </a>
-                <a class="nav-link disabled" href="#" aria-disabled="true"><i class="bi bi-person-circle me-2"></i>My Profile</a>
+
             </nav>
         </aside>
 
         <div class="pa-content flex-grow-1">
+
             <header class="bg-white border-bottom px-4 py-2 d-flex justify-content-end align-items-center gap-3">
-                <span class="text-muted small"><i class="bi bi-person me-1"></i>@User.Identity?.Name (Platform Administrator)</span>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                    <button type="submit" class="btn btn-outline-secondary btn-sm">Log out</button>
+
+                <span class="text-muted small">
+                    <i class="bi bi-person me-1"></i>
+                    @User.Identity?.Name (Platform Administrator)
+                </span>
+
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post"
+                      class="m-0">
+
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+                        Log out
+                    </button>
+
                 </form>
             </header>
 
             <main class="p-4">
                 @RenderBody()
             </main>
+
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
