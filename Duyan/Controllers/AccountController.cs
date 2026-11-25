@@ -89,7 +89,7 @@ namespace Duyan.Controllers
                     return RedirectToAction("Hotel_Manager", "HotelManager");
 
                 case "Hotel Staff":
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Hotel_Staff", "HotelStaff");
 
                 default:
                     HttpContext.Session.Clear();

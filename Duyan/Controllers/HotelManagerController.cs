@@ -4,7 +4,7 @@ namespace Duyan.Controllers
 {
     public class HotelManagerController : Controller
     {
-        public IActionResult Hotel_Admin()
+        public IActionResult Hotel_Manager()
         {
             return View();
         }
