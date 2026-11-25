@@ -1,0 +1,214 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_HotelStaffLayout";
+}
+
+<h1 class="h3 page-title mb-1">Hotel Dashboard</h1>
+<p class="text-muted mb-4">Overview of today's hotel operations and front-desk activities.</p>
+
+@* ---------- Summary cards ---------- *@
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Available rooms</div>
+                <div class="stat-value">28</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Occupied rooms</div>
+                <div class="stat-value">12</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Today's arrivals</div>
+                <div class="stat-value">8</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Today's departures</div>
+                <div class="stat-value">5</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Pending reservations</div>
+                <div class="stat-value">6</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-2">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Pending payments</div>
+                <div class="stat-value">4</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+
+    @* ---------- Today's arrivals ---------- *@
+    <div class="col-xl-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Today's arrivals</strong>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Guest</th>
+                            <th>Room</th>
+                            <th>Check-in</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan Dela Cruz</td>
+                            <td>101</td>
+                            <td>2:00 PM</td>
+                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Maria Santos</td>
+                            <td>205</td>
+                            <td>3:00 PM</td>
+                            <td><span class="badge bg-success">Checked-in</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pedro Reyes</td>
+                            <td>302</td>
+                            <td>4:00 PM</td>
+                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Room status overview ---------- *@
+    <div class="col-xl-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Room status overview</strong>
+            </div>
+
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Ready</span>
+                    <strong>28</strong>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Occupied</span>
+                    <strong>12</strong>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Cleaning</span>
+                    <strong>2</strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span>Under Maintenance</span>
+                    <strong>3</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    @* ---------- Recent reservations ---------- *@
+    <div class="col-xl-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Recent reservations</strong>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Reservation ID</th>
+                            <th>Guest</th>
+                            <th>Room</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RES-0021</td>
+                            <td>Juan Dela Cruz</td>
+                            <td>101</td>
+                            <td><span class="badge bg-success">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>RES-0022</td>
+                            <td>Maria Santos</td>
+                            <td>205</td>
+                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>RES-0023</td>
+                            <td>Pedro Reyes</td>
+                            <td>302</td>
+                            <td><span class="badge bg-success">Confirmed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Recent activity ---------- *@
+    <div class="col-xl-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <strong>Recent activity</strong>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div><strong>Hotel Staff</strong> - Registered a new guest</div>
+                    <div class="small text-muted">Juan Dela Cruz</div>
+                    <div class="small text-muted">Nov 25, 2026 9:15 AM</div>
+                </li>
+
+                <li class="list-group-item">
+                    <div><strong>Hotel Staff</strong> - Checked in a guest</div>
+                    <div class="small text-muted">Room 205</div>
+                    <div class="small text-muted">Nov 25, 2026 10:30 AM</div>
+                </li>
+
+                <li class="list-group-item">
+                    <div><strong>Hotel Staff</strong> - Updated room status</div>
+                    <div class="small text-muted">Room 108 - Ready</div>
+                    <div class="small text-muted">Nov 24, 2026 3:45 PM</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

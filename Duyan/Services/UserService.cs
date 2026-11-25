@@ -1,4 +1,5 @@
-﻿using Duyan.Models;
+﻿
+using Duyan.Models;
 using Duyan.Services.Interfaces;
 
 namespace Duyan.Services
@@ -7,14 +8,19 @@ namespace Duyan.Services
     {
         public (string Controller, string Action) GetHomeRoute(string role)
         {
+            // Platform Admin
             if (string.Equals(role, Roles.PlatformAdmin, StringComparison.OrdinalIgnoreCase))
                 return ("PlatformAdmin", "Dashboard");
 
-            // Next steps: add Hotel Administrator and Hotel Staff here, for example
-            // if (string.Equals(role, AppRoles.HotelAdmin, StringComparison.OrdinalIgnoreCase))
-            //     return ("HotelAdmin", "Index");
+            // Hotel Admin
+            if (string.Equals(role, Roles.HotelAdmin, StringComparison.OrdinalIgnoreCase))
+                return ("HotelAdmin", "Dashboard");
 
-            // Everyone else goes to the current default page for now
+            // Hotel Staff
+            if (string.Equals(role, Roles.HotelStaff, StringComparison.OrdinalIgnoreCase))
+                return ("HotelStaff", "Dashboard");
+
+            // Default route
             return ("Home", "Index");
         }
     }
