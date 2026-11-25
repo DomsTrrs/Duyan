@@ -4,6 +4,7 @@ namespace Duyan.Controllers
 {
     public class PlatformAdminController : Controller
     {
+        // Dashboard
         public IActionResult Dashboard()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -20,13 +21,8 @@ namespace Duyan.Controllers
         // Registration Requests
         public IActionResult HotelApplications()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            var role = HttpContext.Session.GetString("Role");
-
-            if (userId == null || role != "Platform Admin")
-            {
+            if (!IsPlatformAdmin())
                 return RedirectToAction("Login", "Account");
-            }
 
             return View();
         }
@@ -34,13 +30,8 @@ namespace Duyan.Controllers
         // Hotels
         public IActionResult RegisteredHotels()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            var role = HttpContext.Session.GetString("Role");
-
-            if (userId == null || role != "Platform Admin")
-            {
+            if (!IsPlatformAdmin())
                 return RedirectToAction("Login", "Account");
-            }
 
             return View();
         }
@@ -48,13 +39,8 @@ namespace Duyan.Controllers
         // Hotel Administrators
         public IActionResult HotelAdministrators()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            var role = HttpContext.Session.GetString("Role");
-
-            if (userId == null || role != "Platform Admin")
-            {
+            if (!IsPlatformAdmin())
                 return RedirectToAction("Login", "Account");
-            }
 
             return View();
         }
@@ -62,15 +48,19 @@ namespace Duyan.Controllers
         // Activity Logs
         public IActionResult ActivityLogs()
         {
+            if (!IsPlatformAdmin())
+                return RedirectToAction("Login", "Account");
+
+            return View();
+        }
+
+        // Check if the user is a Platform Admin
+        private bool IsPlatformAdmin()
+        {
             var userId = HttpContext.Session.GetInt32("UserId");
             var role = HttpContext.Session.GetString("Role");
 
-            if (userId == null || role != "Platform Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            return View();
+            return userId != null && role == "Platform Admin";
         }
     }
 }
