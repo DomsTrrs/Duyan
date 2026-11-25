@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,35 +11,39 @@
 
     <title>@ViewData["Title"] - Duyan</title>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Duyan.styles.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/Duyan.styles.css"
+          asp-append-version="true" />
 </head>
 
 <body>
 
     <div class="app-container">
 
-        <!-- LEFT SIDEBAR -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
 
             <div class="sidebar-header">
                 <h4>DUYAN</h4>
+
                 <small>
                     @if (User.IsInRole("PlatformAdmin"))
                     {
                         @:Platform Administration
                     }
-                    else if (User.IsInRole("HotelAdmin"))
+                    else if (User.IsInRole("HotelManager"))
                     {
-                        @:Hotel Administration
+                        @:Hotel Management
                     }
                     else if (User.IsInRole("HotelStaff"))
                     {
@@ -44,73 +52,70 @@
                 </small>
             </div>
 
-            <!-- PLATFORM ADMIN NAVIGATION -->
-            @if (User.IsInRole("PlatformAdmin"))
-            {
-                <nav class="sidebar-nav">
+            <nav class="sidebar-nav">
 
+                <!-- PLATFORM ADMIN -->
+                @if (User.IsInRole("PlatformAdmin"))
+                {
                     <a asp-controller="PlatformAdmin"
                        asp-action="Dashboard"
-                       class="nav-link">
+                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "Dashboard" ? "active" : "")">
                         <i class="bi bi-speedometer2"></i>
                         Dashboard
                     </a>
 
                     <a asp-controller="PlatformAdmin"
                        asp-action="RegistrationRequests"
-                       class="nav-link">
+                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "RegistrationRequests" ? "active" : "")">
                         <i class="bi bi-inbox"></i>
                         Registration Requests
                     </a>
 
                     <a asp-controller="PlatformAdmin"
                        asp-action="HotelManagement"
-                       class="nav-link">
+                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "HotelManagement" ? "active" : "")">
                         <i class="bi bi-building"></i>
                         Hotel Management
                     </a>
 
-                   
                     
 
                     <a asp-controller="PlatformAdmin"
                        asp-action="ActivityLogs"
-                       class="nav-link">
+                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "ActivityLogs" ? "active" : "")">
                         <i class="bi bi-clock-history"></i>
                         Activity Logs
                     </a>
+                }
 
-                    
-
-                </nav>
-            }
-
-            <!-- HOTEL ADMIN NAVIGATION -->
-            else if (User.IsInRole("HotelAdmin"))
-            {
-            <nav class="sidebar-nav">
-                <a asp-controller="HotelAdmin" asp-action="Dashboard" class="nav-link">
+                <!-- HOTEL MANAGER -->
+                else if (User.IsInRole("HotelManager"))
+                {
+                <a asp-controller="HotelManager"
+                   asp-action="Hotel_Manager"
+                   class="nav-link @(currentController == "HotelManager" && currentAction == "Hotel_Manager" ? "active" : "")">
                     <i class="bi bi-speedometer2"></i>
                     Dashboard
                 </a>
-            </nav>
-            }
+                }
 
-            <!-- HOTEL STAFF NAVIGATION -->
-            else if (User.IsInRole("HotelStaff"))
-            {
-            <nav class="sidebar-nav">
-                <a asp-controller="HotelStaff" asp-action="Dashboard" class="nav-link">
+                <!-- HOTEL STAFF -->
+                else if (User.IsInRole("HotelStaff"))
+                {
+                <a asp-controller="HotelStaff"
+                   asp-action="Hotel_Staff"
+                   class="nav-link @(currentController == "HotelStaff" && currentAction == "Hotel_Staff" ? "active" : "")">
                     <i class="bi bi-speedometer2"></i>
                     Dashboard
                 </a>
+                }
+
             </nav>
-            }
 
         </aside>
 
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN AREA -->
         <div class="main-wrapper">
 
             <!-- TOP NAVBAR -->
@@ -126,10 +131,12 @@
                     <form asp-controller="Account"
                           asp-action="Logout"
                           method="post">
+
                         <button type="submit"
                                 class="btn btn-outline-secondary btn-sm">
                             Log out
                         </button>
+
                     </form>
 
                 </div>
@@ -147,7 +154,7 @@
     </div>
 
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
