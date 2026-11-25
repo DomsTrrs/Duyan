@@ -6,12 +6,11 @@ namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
+        
         private readonly IAuthenticationService _authenticationService;
 
-        public AccountController(IUserService userService, IAuthenticationService authenticationService)
+        public AccountController(IAuthenticationService authenticationService)
         {
-            _userService = userService;
             _authenticationService = authenticationService;
         }
 
@@ -38,18 +37,6 @@ namespace Duyan.Controllers
             {
                 // FIX: return the same view/model type the GET actions use
                 // (assumes AuthPageViewModel has a SignUp property - adjust to yours)
-                return View("Login", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
-            }
-
-            // Call UserService to register the user
-            var error = await _userService.SignUpAsync(model);
-
-            // Check if registration was successful
-            if (error != null)
-            {
-                // FIX: show the real error instead of always "Email is already registered."
-                ModelState.AddModelError("Email", error);
-
                 return View("Login", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 

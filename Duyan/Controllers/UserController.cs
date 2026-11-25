@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Duyan.Models;
 using Duyan.Models.ViewModels;
-using Duyan.Services.Interfaces;
 
 namespace Duyan.Controllers
 {
@@ -13,12 +12,10 @@ namespace Duyan.Controllers
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly IUserService _userService;
 
-        public UserController(ApplicationDbContext context, IUserService userService)
+        public UserController(ApplicationDbContext context)
         {
             _context = context;
-            _userService = userService;
         }
 
 
@@ -41,6 +38,14 @@ namespace Duyan.Controllers
             return View(users);
         }
 
+        // GET: UserController/Create
+        // FIX: this was missing, so there was no page to open the Create form
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new SignUpViewModel());
+        }
+
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -51,17 +56,36 @@ namespace Duyan.Controllers
                 return View(model);
             }
 
-            // SignUpAsync now validates AND saves the user
-            var error = await _userService.SignUpAsync(model);
+            var email = model.Email.Trim().ToLower();
 
-            if (error != null)
+            // Is the email already taken?
+            if (await _context.User.AnyAsync(u => u.Email == email))
             {
-                ModelState.AddModelError("Email", error);
+                ModelState.AddModelError("Email", "Email already exists.");
                 return View(model);
             }
 
-                // FIX: removed the manual "new User { ... }" + SaveChanges block.
-                // It inserted the same user a second time.
+            // Is the role allowed?
+            var allowedRoles = new[] { "Hotel Staff", "Hotel Manager" };
+            if (!allowedRoles.Contains(model.Role))
+            {
+                ModelState.AddModelError("Role", "Invalid role.");
+                return View(model);
+            }
+
+            // The user is created HERE
+            var user = new User
+            {
+                Hotel_id = model.Hotel_id,
+                Full_name = model.Full_name,
+                Email = email,
+                Password_hash = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                role = model.Role,
+                is_active = true
+            };
+
+            _context.User.Add(user);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

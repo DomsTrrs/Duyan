@@ -1,7 +1,6 @@
 ﻿using Duyan.Data;
 using Duyan.Models;
 using Duyan.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Duyan.Services.Interfaces;
 
