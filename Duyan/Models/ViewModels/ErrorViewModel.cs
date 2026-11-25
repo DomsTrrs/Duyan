@@ -1,4 +1,4 @@
-namespace Duyan.Models
+namespace Duyan.Models.ViewModels
 {
     public class ErrorViewModel
     {

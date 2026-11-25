@@ -1,43 +1,136 @@
-﻿@model Duyan.Models.LoginViewModel;
+﻿@using Duyan.Models.ViewModels
+@model AuthPageViewModel
 
 @{
     ViewData["Title"] = "Login";
+    Layout = null; // standalone page: no navbar/container from _Layout
+
+    string loginClass = "";
+    string signupClass = "d-none";
+    string cardClass = "login-card";
+
+    if (Model.ShowSignUp)
+    {
+        loginClass = "d-none";
+        signupClass = "";
+        cardClass = "login-card is-wide";
+    }
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">Login</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Duyan</title>
 
-                <form asp-controller="Account" asp-action="Login" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet" />
 
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" placeholder="Enter username" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="bg" aria-hidden="true"></div>
+    <div class="bg-shade" aria-hidden="true"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" placeholder="Enter password" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
+    <!-- Section 1: hero -->
+    <section id="hero" class="panel">
+        <div class="container">
+            <h1 class="hero-title">Duyan</h1>
+            <p class="hero-sub">Every hotel, every booking, one place.</p>
+        </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
+        <a href="#login" class="scroll-cue" aria-label="Scroll down to log in">
+            <span>Scroll to log in</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 8l7 7 7-7" />
+                <path d="M5 13l7 7 7-7" />
+            </svg>
+        </a>
+    </section>
 
-                    <div class="text-center mt-3">
-                        <a asp-controller="Account" asp-action="Sign_Up">Sign Up</a>
-                    </div>
-                </form>
+    <!-- Section 2: login / sign up -->
+    <section id="login" class="panel">
+        <a href="#hero" class="back-up">Back to top</a>
+
+        <div id="authCard" class="@cardClass">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+
+            <div id="loginPane" class="@loginClass">
+                <partial name="_LoginForm" model="Model.Login" />
+                <p class="text-center mt-3"><a href="#" data-show="signup">Create an account</a></p>
+            </div>
+
+            <div id="signupPane" class="@signupClass">
+                <partial name="_SignUpForm" model="Model.SignUp" />
+                <p class="text-center mt-3"><a href="#" data-show="login">Back to log in</a></p>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
-@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-}
+
+    <script>
+        (function () {
+            var body = document.body;
+            var login = document.getElementById('login');
+            var hero = document.getElementById('hero');
+
+            // Show the login card and dim the photo when the login section is mostly visible
+            new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    body.classList.toggle('is-login', e.isIntersecting);
+                });
+            }, { threshold: 0.55 }).observe(login);
+
+            // Switch between the login form and the sign-up form
+            var links = document.querySelectorAll('[data-show]');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var showSignup = this.getAttribute('data-show') === 'signup';
+                    document.getElementById('loginPane').classList.toggle('d-none', showSignup);
+                    document.getElementById('signupPane').classList.toggle('d-none', !showSignup);
+                    document.getElementById('authCard').classList.toggle('is-wide', showSignup);
+                });
+            }
+
+            // One nudge of the wheel / arrow key carries you to the next section
+            var busy = false;
+            function go(el) {
+                if (busy) return;
+                busy = true;
+                el.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(function () { busy = false; }, 900);
+            }
+
+            window.addEventListener('wheel', function (e) {
+                if (Math.abs(e.deltaY) < 8) return;
+                var atHero = window.scrollY < window.innerHeight / 2;
+                if (e.deltaY > 0 && atHero) { e.preventDefault(); go(login); }
+                else if (e.deltaY < 0 && !atHero) { e.preventDefault(); go(hero); }
+            }, { passive: false });
+
+            window.addEventListener('keydown', function (e) {
+                var tag = (e.target.tagName || '').toLowerCase();
+                if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); go(login); }
+                if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(hero); }
+            });
+
+            // If the page reopened on the sign-up form (after an error) or with a success message, jump to the login section
+            if (document.querySelector('.alert-success') || !document.getElementById('signupPane').classList.contains('d-none')) {
+                login.scrollIntoView();
+            }
+        })();
+    </script>
+</body>
+</html>

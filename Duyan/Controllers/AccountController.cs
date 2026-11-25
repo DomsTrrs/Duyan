@@ -1,4 +1,4 @@
-﻿using Duyan.Models;
+﻿using Duyan.Models.ViewModels;
 using Duyan.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +16,14 @@ namespace Duyan.Controllers
         // GET: Account/Login
         public IActionResult Login()
         {
-            return View(new LoginViewModel());
+            return View(new AuthPageViewModel());
         }
 
         // GET: Account/Sign_Up
+        [HttpGet]
         public IActionResult Sign_Up()
         {
-            return View(new SignUpViewModel());
+            return View("Login", new AuthPageViewModel { ShowSignUp = true });
         }
 
         // POST: Account/Sign_Up
@@ -52,6 +53,31 @@ namespace Duyan.Controllers
 
             // Redirect to Login after successful signup
             return RedirectToAction(nameof(Login));
+        }
+
+        // POST: Account/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            bool isLoggedIn = await _userService.LoginAsync(model);
+
+            if (!isLoggedIn)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Invalid email or password."
+                );
+
+                return View(model);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Account/Details/5

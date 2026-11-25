@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Duyan.Models;
 using Microsoft.AspNetCore.Mvc;
+using Duyan.Models.ViewModels;
 
 namespace Duyan.Controllers
 {

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Duyan.Models;
 
-
-
 namespace Duyan.Controllers
 {
     public class UserController : Controller

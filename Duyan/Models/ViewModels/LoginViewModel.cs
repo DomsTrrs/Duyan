@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Duyan.Models
+namespace Duyan.Models.ViewModels
 {
     public class LoginViewModel
     {
@@ -19,7 +19,7 @@ namespace Duyan.Models
         public string Message { get; set; } = string.Empty;
 
         // Login button logic
-        public bool Login()
+        public bool Login_A()
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
