@@ -1,12 +1,14 @@
 ﻿using Duyan.Data;
 using Duyan.Models;
 using Duyan.Models.ViewModels;
+using Duyan.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Duyan.Services
 {
     public class UserService : IUserService
     {
+        // FIX: _context didn't exist, so the class didn't compile
         private readonly ApplicationDbContext _context;
 
         public UserService(ApplicationDbContext context)
@@ -14,61 +16,55 @@ namespace Duyan.Services
             _context = context;
         }
 
-        // REGISTER
-        public async Task<bool> SignUpAsync(SignUpViewModel model)
+        public async Task<(User? User, string? Error)> PrepareUserAsync(SignUpViewModel model)
         {
-            if (await EmailExistsAsync(model.Email))
+            var email = model.Email.Trim().ToLower();
+
+            if (await EmailExistsAsync(email))
             {
-                return false;
+                return (null, "Email already exists.");
+            }
+
+            var allowedRoles = new[] { "Hotel Staff", "Hotel Manager" };
+            if (!allowedRoles.Contains(model.Role))
+            {
+                return (null, "Invalid role.");
             }
 
             var user = new User
             {
                 Hotel_id = model.Hotel_id,
                 Full_name = model.Full_name,
-                Email = model.Email,
+                Email = email,
                 Password_hash = BCrypt.Net.BCrypt.HashPassword(model.Password),
-                role = "Hotel Staff"
+                role = model.Role,
+                is_active = true
             };
 
-            await _context.User.AddAsync(user);
-            await _context.SaveChangesAsync();
-
-            return true;
+            return (user, null);
         }
 
-        // CHECK EMAIL
         public async Task<bool> EmailExistsAsync(string email)
         {
-            return await _context.User
-                .AnyAsync(u => u.Email == email);
+            email = email.Trim().ToLower();
+            return await _context.User.AnyAsync(u => u.Email == email);
         }
 
-        // LOGIN
-        public async Task<bool> LoginAsync(LoginViewModel model)
+        // Validates, builds, AND saves. Used by AccountController.
+        public async Task<string?> SignUpAsync(SignUpViewModel model)
         {
-            // Find user by email
-            var user = await _context.User
-                .FirstOrDefaultAsync(u => u.Email == model.Email);
+            // FIX: reuse PrepareUserAsync (same checks) and actually save the user.
+            // Before, this only validated and returned null, so nothing was ever saved.
+            var (user, error) = await PrepareUserAsync(model);
 
-            // Check if user exists
-            if (user == null)
-            {
-                return false;
-            }
+            if (error != null)
+                return error;
 
-            // Verify password
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(
-                model.Password,
-                user.Password_hash
-            );
+            _context.User.Add(user!);
+            await _context.SaveChangesAsync();
 
-            if (!isPasswordValid)
-            {
-                return false;
-            }
-
-            return true;
+            return null;
         }
+
     }
 }

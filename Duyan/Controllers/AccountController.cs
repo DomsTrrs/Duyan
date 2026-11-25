@@ -1,5 +1,5 @@
 ﻿using Duyan.Models.ViewModels;
-using Duyan.Services;
+using Duyan.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Duyan.Controllers
@@ -7,10 +7,12 @@ namespace Duyan.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IAuthenticationService authenticationService)
         {
             _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         // GET: Account/Login
@@ -34,21 +36,21 @@ namespace Duyan.Controllers
             // Check if form is valid
             if (!ModelState.IsValid)
             {
-                return View(model);
+                // FIX: return the same view/model type the GET actions use
+                // (assumes AuthPageViewModel has a SignUp property - adjust to yours)
+                return View("Login", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 
             // Call UserService to register the user
-            bool isRegistered = await _userService.SignUpAsync(model);
+            var error = await _userService.SignUpAsync(model);
 
             // Check if registration was successful
-            if (!isRegistered)
+            if (error != null)
             {
-                ModelState.AddModelError(
-                    "Email",
-                    "Email is already registered."
-                );
+                // FIX: show the real error instead of always "Email is already registered."
+                ModelState.AddModelError("Email", error);
 
-                return View(model);
+                return View("Login", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 
             // Redirect to Login after successful signup
@@ -62,19 +64,19 @@ namespace Duyan.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(new AuthPageViewModel { Login = model });
             }
 
-            bool isLoggedIn = await _userService.LoginAsync(model);
+            var user = await _authenticationService.AuthenticateAsync(model.Email, model.Password);
 
-            if (!isLoggedIn)
+            if (user == null)
             {
                 ModelState.AddModelError(
                     string.Empty,
                     "Invalid email or password."
                 );
 
-                return View(model);
+                return View(new AuthPageViewModel { Login = model });
             }
 
             return RedirectToAction("Index", "Home");

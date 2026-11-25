@@ -1,55 +1,69 @@
 ﻿using Duyan.Data;
 using Duyan.Models;
+using Duyan.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Duyan.Services.Interfaces;
 
 namespace Duyan.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ApplicationDbContext _context;
-        private readonly PasswordHasher<User> _passwordHasher;
+
 
         public AuthenticationService(ApplicationDbContext context)
         {
             _context = context;
-            _passwordHasher = new PasswordHasher<User>();
         }
 
         public async Task<User?> AuthenticateAsync(string email, string password)
         {
-            // Find the user using their email
+            email = email.Trim().ToLower();
+
             var user = await _context.User
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-            // Check if the user exists
+            if (user == null || !user.is_active)
+            {
+                return null;
+            }
+
+            // BCrypt, same as sign-up
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password_hash))
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        // LOGIN
+        public async Task<bool> LoginAsync(LoginViewModel model)
+        {
+            // Find user by email
+            var user = await _context.User
+                .FirstOrDefaultAsync(u => u.Email == model.Email);
+
+            // Check if user exists
             if (user == null)
             {
-                return null;
+                return false;
             }
 
-            // Check if the account is active
-            if (!user.is_active)
-            {
-                return null;
-            }
-
-            // Verify the submitted password against the stored hash
-            var result = _passwordHasher.VerifyHashedPassword(
-                user,
-                user.Password_hash,
-                password
+            // Verify password
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(
+                model.Password,
+                user.Password_hash
             );
 
-            // Return the user if the password is correct
-            if (result == PasswordVerificationResult.Success ||
-                result == PasswordVerificationResult.SuccessRehashNeeded)
+            if (!isPasswordValid)
             {
-                return user;
+                return false;
             }
 
-            // Invalid password
-            return null;
+            return true;
         }
+
     }
 }

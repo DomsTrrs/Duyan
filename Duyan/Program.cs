@@ -1,10 +1,12 @@
 using Duyan.Data;
 using Microsoft.EntityFrameworkCore;
 using Duyan.Services;
+using Duyan.Services.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Add services to the container.
