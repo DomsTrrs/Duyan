@@ -1,104 +1,89 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Duyan.Models.ViewModels;
+using Duyan.Services;
 using Microsoft.AspNetCore.Mvc;
-using Duyan.Models;
 
 namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: AccountController
-        
-        
-        // Controllers/AccountController.cs
+        private readonly IUserService _userService;
 
+        public AccountController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
-    
-            public IActionResult Login()
-            {
-                return View(new LoginViewModel());
-            }
+        // GET: Account/Login
+        public IActionResult Login()
+        {
+            return View(new AuthPageViewModel());
+        }
 
+        // GET: Account/Sign_Up
+        [HttpGet]
         public IActionResult Sign_Up()
         {
-            return View(new SignUpViewModel());
+            return View("Login", new AuthPageViewModel { ShowSignUp = true });
         }
 
-
-
-
-
-        public ActionResult Index()
+        // POST: Account/Sign_Up
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Sign_Up(SignUpViewModel model)
         {
-            return View();
+            // Check if form is valid
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Call UserService to register the user
+            bool isRegistered = await _userService.SignUpAsync(model);
+
+            // Check if registration was successful
+            if (!isRegistered)
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "Email is already registered."
+                );
+
+                return View(model);
+            }
+
+            // Redirect to Login after successful signup
+            return RedirectToAction(nameof(Login));
         }
 
-        // GET: AccountController/Details/5
+        // POST: Account/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            bool isLoggedIn = await _userService.LoginAsync(model);
+
+            if (!isLoggedIn)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Invalid email or password."
+                );
+
+                return View(model);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        // GET: Account/Details/5
         public ActionResult Details(int id)
         {
             return View();
-        }
-
-        // GET: AccountController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AccountController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AccountController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AccountController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

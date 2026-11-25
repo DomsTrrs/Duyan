@@ -1,0 +1,221 @@
+﻿:root {
+    --ink: #f4f7fa;
+    --ink-soft: rgba(244, 247, 250, .72);
+    --sea: #5fc4b8;
+    --night: 8, 16, 28;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Manrope", system-ui, sans-serif;
+    color: var(--ink);
+    background: rgb(var(--night));
+}
+
+/* Shared background image (path is relative to this css file) */
+.bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: url('/images/duyan-bg.jpg') center / cover no-repeat;
+    transition: filter .9s ease, transform .9s ease;
+}
+
+.bg-shade {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(var(--night), .35), rgba(var(--night), .6));
+    transition: background .9s ease;
+}
+
+body.is-login .bg {
+    filter: blur(6px);
+    transform: scale(1.05);
+}
+
+body.is-login .bg-shade {
+    background: rgba(var(--night), .72);
+}
+
+.panel {
+    min-height: 100vh;
+    min-height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    position: relative;
+}
+
+/* Hero */
+.hero-title {
+    font-weight: 800;
+    font-size: clamp(4rem, 14vw, 11rem);
+    line-height: .9;
+    letter-spacing: -.04em;
+    margin: 0;
+}
+
+.hero-sub {
+    font-weight: 300;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    color: var(--ink-soft);
+    max-width: 28ch;
+    margin: 1.5rem 0 0;
+}
+
+.scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+    .scroll-cue svg {
+        width: 34px;
+        height: 34px;
+        animation: nudge 1.8s ease-in-out infinite;
+    }
+
+@keyframes nudge {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+/* Login */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
+    padding: 2.25rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .22);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease .15s, transform .7s ease .15s;
+}
+
+body.is-login .login-card {
+    opacity: 1;
+    transform: none;
+}
+
+.login-card h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: .25rem;
+}
+
+.login-card .lead-text {
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+}
+
+.login-card .form-label {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.login-card .form-control {
+    background: rgba(255, 255, 255, .92);
+    border: 0;
+    padding: .7rem .9rem;
+}
+
+    .login-card .form-control:focus {
+        box-shadow: 0 0 0 .25rem rgba(95, 196, 184, .45);
+    }
+
+.btn-signin {
+    background: var(--sea);
+    border: 0;
+    color: #06201d;
+    font-weight: 800;
+    padding: .75rem;
+}
+
+    .btn-signin:hover,
+    .btn-signin:focus-visible {
+        background: #7fd6cb;
+        color: #06201d;
+    }
+
+.login-card a {
+    color: var(--ink);
+}
+
+.back-up {
+    z-index: 2;
+    position: absolute;
+    top: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+.text-danger {
+    color: #ffb4b4 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .bg, .bg-shade, .login-card {
+        transition: none;
+    }
+
+    .scroll-cue svg {
+        animation: none;
+    }
+}
+
+/* ---------- Layout fixes for the wide sign-up form ---------- */
+
+/* Reserve room at the top so the card never covers "Back to top" (#login beats .panel) */
+#login {
+    padding-top: 4.5rem;
+    padding-bottom: 2rem;
+}
+
+/* If the card is taller than the screen, it scrolls inside itself instead of growing upward */
+.login-card {
+    max-height: calc(100dvh - 6.5rem);
+    overflow-y: auto;
+}
+
+    /* Sign-up mode: wider card so the fields sit side by side */
+    .login-card.is-wide {
+        max-width: 760px;
+    }
+
+@media (prefers-reduced-motion: no-preference) {
+    .login-card {
+        transition: opacity .7s ease .15s, transform .7s ease .15s, max-width .4s ease;
+    }
+}

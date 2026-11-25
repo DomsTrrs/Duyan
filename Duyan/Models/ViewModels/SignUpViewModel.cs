@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Duyan.Models
+namespace Duyan.Models.ViewModels
 {
     public class SignUpViewModel
     {

@@ -1,7 +1,11 @@
 using Duyan.Data;
 using Microsoft.EntityFrameworkCore;
+using Duyan.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
