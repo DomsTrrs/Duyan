@@ -23,8 +23,10 @@ namespace Duyan.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var role = HttpContext.Session.GetString("Role");
+            var action = context.RouteData.Values["action"]?.ToString();
 
-            if (role != "Platform Administrator" && role != "Hotel Administrator")
+            // Create is the sign-up endpoint, so it must work before logging in
+            if (action != "Create" && role != "Platform Administrator" && role != "Hotel Administrator")
             {
                 context.Result = RedirectToAction("Login", "Account");
             }
@@ -43,7 +45,7 @@ namespace Duyan.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View(new SignUpViewModel());
+            return RedirectToAction("Sign_Up", "Account");
         }
 
         // POST: UserController/Create
@@ -53,7 +55,7 @@ namespace Duyan.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("~/Views/Account/Login.cshtml", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 
             var email = model.Email.Trim().ToLower();
@@ -62,15 +64,15 @@ namespace Duyan.Controllers
             if (await _context.User.AnyAsync(u => u.Email == email))
             {
                 ModelState.AddModelError("Email", "Email already exists.");
-                return View(model);
+                return View("~/Views/Account/Login.cshtml", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 
             // Is the role allowed?
-            var allowedRoles = new[] { "Hotel Staff", "Hotel Manager" };
+            var allowedRoles = new[] { "Hotel Staff", "Hotel Manager", "Platform Admin" };
             if (!allowedRoles.Contains(model.Role))
             {
                 ModelState.AddModelError("Role", "Invalid role.");
-                return View(model);
+                return View("~/Views/Account/Login.cshtml", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
             }
 
             // The user is created HERE
@@ -87,7 +89,8 @@ namespace Duyan.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            // Account created - go to Login
+            return RedirectToAction("Login", "Account");
         }
 
         // GET: UserController/Edit/5

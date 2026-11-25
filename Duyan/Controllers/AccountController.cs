@@ -1,12 +1,13 @@
-﻿using Duyan.Models.ViewModels;
+﻿
+using Duyan.Models.ViewModels;
 using Duyan.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
-        
         private readonly IAuthenticationService _authenticationService;
 
         public AccountController(IAuthenticationService authenticationService)
@@ -15,6 +16,7 @@ namespace Duyan.Controllers
         }
 
         // GET: Account/Login
+        [HttpGet]
         public IActionResult Login()
         {
             return View(new AuthPageViewModel());
@@ -24,24 +26,10 @@ namespace Duyan.Controllers
         [HttpGet]
         public IActionResult Sign_Up()
         {
-            return View("Login", new AuthPageViewModel { ShowSignUp = true });
-        }
-
-        // POST: Account/Sign_Up
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Sign_Up(SignUpViewModel model)
-        {
-            // Check if form is valid
-            if (!ModelState.IsValid)
+            return View("Login", new AuthPageViewModel
             {
-                // FIX: return the same view/model type the GET actions use
-                // (assumes AuthPageViewModel has a SignUp property - adjust to yours)
-                return View("Login", new AuthPageViewModel { ShowSignUp = true, SignUp = model });
-            }
-
-            // Redirect to Login after successful signup
-            return RedirectToAction(nameof(Login));
+                ShowSignUp = true
+            });
         }
 
         // POST: Account/Login
@@ -54,7 +42,10 @@ namespace Duyan.Controllers
                 return View(new AuthPageViewModel { Login = model });
             }
 
-            var user = await _authenticationService.AuthenticateAsync(model.Email, model.Password);
+            var user = await _authenticationService.AuthenticateAsync(
+                model.Email,
+                model.Password
+            );
 
             if (user == null)
             {
@@ -66,13 +57,54 @@ namespace Duyan.Controllers
                 return View(new AuthPageViewModel { Login = model });
             }
 
-            return RedirectToAction("Index", "Home");
+            // Check whether the user's role is recognized.
+            if (user.role != "Platform Admin" &&
+                user.role != "Hotel Manager" &&
+                user.role != "Hotel Staff")
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Your account role is not recognized."
+                );
+
+                return View(new AuthPageViewModel { Login = model });
+            }
+
+            // Store user information in Session.
+            HttpContext.Session.SetInt32("UserId", user.User_id);
+            HttpContext.Session.SetString("FullName", user.Full_name);
+            HttpContext.Session.SetString("Role", user.role);
+            HttpContext.Session.SetString(
+                "HotelId",
+                user.Hotel_id?.ToString() ?? string.Empty
+            );
+
+            // Redirect based on the user's role.
+            switch (user.role)
+            {
+                case "Platform Admin":
+                    return RedirectToAction("Dashboard", "PlatformAdmin");
+
+                case "Hotel Manager":
+                    return RedirectToAction("Hotel_Manager", "HotelManager");
+
+                case "Hotel Staff":
+                    return RedirectToAction("Index", "Home");
+
+                default:
+                    HttpContext.Session.Clear();
+                    return RedirectToAction("Login");
+            }
         }
 
-        // GET: Account/Details/5
-        public ActionResult Details(int id)
+        // POST: Account/Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
         {
-            return View();
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Login");
         }
     }
 }

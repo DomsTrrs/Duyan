@@ -2,7 +2,7 @@
 
 namespace Duyan.Controllers
 {
-    public class HotelAdminController : Controller
+    public class HotelManagerController : Controller
     {
         public IActionResult Hotel_Admin()
         {

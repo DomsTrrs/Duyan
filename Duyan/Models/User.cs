@@ -8,7 +8,7 @@ namespace Duyan.Models
         [Key]
         public int User_id { get; set; }
 
-        public required int Hotel_id { get; set; }
+        public required int? Hotel_id { get; set; }
 
         public required string Full_name { get; set; }
 

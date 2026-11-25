@@ -11,7 +11,7 @@ namespace Duyan.Models.ViewModels
     }
 
     // ---------- Dashboard ----------
-    public class PlatformDashboardViewModel
+    public class PlatformAdminViewModel
     {
         public int TotalHotels { get; set; }
         public int ActiveHotels { get; set; }
