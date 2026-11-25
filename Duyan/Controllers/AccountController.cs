@@ -1,116 +1,63 @@
-﻿using Duyan.Data;
-using Duyan.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Duyan.Models;
+using Duyan.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Duyan.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IUserService _userService;
 
-        private readonly ApplicationDbContext _context;
-
-        public AccountController(ApplicationDbContext context)
+        public AccountController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
-        // GET: AccountController
 
+        // GET: Account/Login
         public IActionResult Login()
         {
             return View(new LoginViewModel());
         }
 
-        // GET: AccountController/Details/5
+        // GET: Account/Sign_Up
+        public IActionResult Sign_Up()
+        {
+            return View(new SignUpViewModel());
+        }
+
+        // POST: Account/Sign_Up
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Sign_Up(SignUpViewModel model)
+        {
+            // Check if form is valid
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Call UserService to register the user
+            bool isRegistered = await _userService.SignUpAsync(model);
+
+            // Check if registration was successful
+            if (!isRegistered)
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "Email is already registered."
+                );
+
+                return View(model);
+            }
+
+            // Redirect to Login after successful signup
+            return RedirectToAction(nameof(Login));
+        }
+
+        // GET: Account/Details/5
         public ActionResult Details(int id)
         {
             return View();
-        }
-
-        // GET: AccountController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AccountController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AccountController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AccountController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            var user = await _context.User
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null || user.Password_hash != password)
-            {
-                ViewBag.Error = "Invalid email or password.";
-                return View(new LoginViewModel());
-            }
-
-            if (!user.is_active)
-            {
-                ViewBag.Error = "Your account is inactive.";
-                return View(new LoginViewModel());
-            }
-
-            return RedirectToAction("Index", "Home");
         }
     }
 }
