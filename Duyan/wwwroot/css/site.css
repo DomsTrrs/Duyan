@@ -162,8 +162,9 @@ body {
 .top-navbar {
     height: 60px;
     min-height: 60px;
+    box-shadow: none !important;
     background-color: white;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: none !important;
     display: flex;
     align-items: center;
     justify-content: flex-end;

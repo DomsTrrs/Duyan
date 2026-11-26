@@ -1,0 +1,286 @@
+﻿/* =========================================================
+   DUYAN - UI theme v3
+   Glass sidebar + solid white cards over a dimmed photo.
+   File: wwwroot/css/glass.css  (link AFTER bootstrap + site.css)
+   Font (optional, in <head>):
+   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+   ========================================================= */
+
+:root {
+    --accent: #5FC4B8;
+    --accent-deep: #2E8F85;
+    --accent-ink: #0B2E2B;
+    /* text on the photo (page title, subtitle) */
+    --text: #FFFFFF;
+    --text-muted: rgba(255, 255, 255, .72);
+    /* text inside the white cards */
+    --ink: #12312E;
+    --ink-muted: rgba(18, 49, 46, .62);
+    --card-bg: rgba(255, 255, 255, .94); /* solid white, a hint of the photo */
+    --card-divider: rgba(18, 49, 46, .10);
+    /* glass: sidebar only */
+    --glass-tint: rgba(8, 24, 34, .38);
+    --glass-fill-hover: rgba(255, 255, 255, .13);
+    --glass-border: rgba(255, 255, 255, .20);
+    --glass-blur: blur(22px) saturate(140%);
+    --radius: 24px;
+}
+
+/* ---------- Background: photo + dimming overlay on <html> ---------- */
+html {
+    min-height: 100%;
+    background-color: #0B1D26;
+    background-image:
+    /* >>> dimming: raise these two numbers for darker, lower for brighter <<< */
+    linear-gradient(rgba(6, 20, 28, .50), rgba(6, 20, 28, .62)), url('/images/duyan-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body {
+    min-height: 100vh;
+    background: transparent !important;
+    color: var(--text);
+    font-family: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+}
+
+    /* Let the photo show through the layout wrappers */
+    body > div,
+    body > div > div,
+    body > main,
+    body > div > main,
+    main, .main, .main-content, .content, .content-wrapper,
+    .page-content, .page-wrapper, .app, .app-shell, .layout, .wrapper,
+    .container-fluid {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+
+    /* ---------- Sidebar (the only glass element) ---------- */
+    body nav.sidebar, body aside, body .sidebar, body #sidebar, body .sidebar-wrapper {
+        background: var(--glass-tint) !important;
+        -webkit-backdrop-filter: var(--glass-blur);
+        backdrop-filter: var(--glass-blur);
+        border-right: 1px solid var(--glass-border) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+        color: var(--text) !important;
+    }
+
+.sidebar a, #sidebar a, aside a,
+.sidebar .nav-link, #sidebar .nav-link, aside .nav-link {
+    color: var(--text-muted) !important;
+    border-radius: 14px;
+    margin: 2px 12px;
+    transition: background .2s ease, color .2s ease;
+}
+
+    .sidebar a:hover, #sidebar a:hover, aside a:hover {
+        background: var(--glass-fill-hover) !important;
+        color: var(--text) !important;
+    }
+
+    .sidebar a.active, #sidebar a.active, aside a.active,
+    .sidebar .nav-link.active, #sidebar .nav-link.active, aside .nav-link.active {
+        background: rgba(95, 196, 184, .22) !important;
+        color: var(--accent) !important;
+        box-shadow: inset 0 0 0 1px rgba(95, 196, 184, .35);
+        font-weight: 600;
+    }
+
+.sidebar .small, .sidebar .text-white-50, aside .small {
+    color: var(--text-muted) !important;
+}
+
+/* ---------- Top bar: plain, blends into the photo (no glass) ---------- */
+.topbar, header.navbar, .navbar, .top-row, main > header, body header {
+    background: transparent !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, .18) !important;
+    box-shadow: none !important;
+    color: var(--text) !important;
+}
+
+    .topbar a, .navbar a, .navbar .nav-link, .topbar i, .navbar i {
+        color: var(--text) !important;
+    }
+
+/* Log out + outline buttons */
+.btn-outline-secondary, .btn-outline-dark, .btn-outline-light {
+    background: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .28);
+    color: var(--text) !important;
+    border-radius: 12px;
+}
+
+    .btn-outline-secondary:hover, .btn-outline-dark:hover, .btn-outline-light:hover {
+        background: rgba(255, 255, 255, .18);
+        border-color: rgba(255, 255, 255, .45);
+    }
+
+/* Primary buttons: teal with dark text */
+.btn-primary {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent-ink) !important;
+    font-weight: 700;
+    border-radius: 12px;
+}
+
+    .btn-primary:hover {
+        background: #76D3C8 !important;
+        border-color: #76D3C8 !important;
+    }
+
+/* ---------- Page typography (sits on the photo, so white) ---------- */
+.page-title {
+    color: var(--text);
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* ---------- Cards: solid white ---------- */
+.card {
+    background: var(--card-bg) !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid rgba(255, 255, 255, .65) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .22) !important;
+    color: var(--ink);
+    overflow: hidden;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .30) !important;
+    }
+
+    /* muted text INSIDE cards must be dark, not white */
+    .card .text-muted, .card .small.text-muted {
+        color: var(--ink-muted) !important;
+    }
+
+.card-header, .card-header.bg-white {
+    background: transparent !important;
+    border-bottom: 1px solid var(--card-divider) !important;
+    color: var(--ink);
+}
+
+/* ---------- Summary cards ---------- */
+.stat-icon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(95, 196, 184, .20);
+    color: var(--accent-deep);
+    font-size: 1.05rem;
+    margin-bottom: .6rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--ink);
+}
+
+/* highlighted first card: solid teal */
+.stat-card-accent {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent-ink);
+}
+
+    .stat-card-accent .text-muted {
+        color: rgba(11, 46, 43, .72) !important;
+    }
+
+    .stat-card-accent .stat-value {
+        color: var(--accent-ink);
+    }
+
+    .stat-card-accent .stat-icon {
+        background: rgba(255, 255, 255, .45);
+        color: var(--accent-ink);
+    }
+
+/* ---------- Tables ---------- */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--ink);
+    --bs-table-hover-bg: transparent;
+    color: var(--ink);
+}
+
+    .table > :not(caption) > * > * {
+        background: transparent !important;
+        color: var(--ink);
+        border-bottom-color: var(--card-divider);
+    }
+
+    .table thead th, .table-light, .table thead.table-light th {
+        background: rgba(95, 196, 184, .16) !important;
+        color: var(--ink-muted) !important;
+        font-weight: 700;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        border-bottom: 1px solid var(--card-divider);
+    }
+
+    .table tbody tr {
+        transition: background .2s ease;
+    }
+
+        .table tbody tr:hover > * {
+            background: rgba(95, 196, 184, .10) !important;
+        }
+
+/* ---------- Activity list ---------- */
+.list-group-item {
+    background: transparent !important;
+    color: var(--ink);
+    border-color: var(--card-divider) !important;
+}
+
+    .list-group-item:hover {
+        background: rgba(95, 196, 184, .10) !important;
+    }
+
+/* ---------- Form fields (for upcoming pages) ---------- */
+.form-label {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.form-control, .form-select {
+    background: #fff;
+    border: 1px solid var(--card-divider);
+    border-radius: 10px;
+    color: var(--ink);
+    padding: .8rem 1rem;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(95, 196, 184, .35);
+    }
+
+/* ---------- Sidebar fallback if backdrop-filter is unsupported ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    body .sidebar, body #sidebar, body aside {
+        background: rgba(10, 30, 40, .85) !important;
+    }
+}
