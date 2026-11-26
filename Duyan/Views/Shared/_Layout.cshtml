@@ -1,8 +1,4 @@
-﻿@{
-    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
-    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
-}
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,16 +7,20 @@
 
     <title>@ViewData["Title"] - Duyan</title>
 
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet"
           href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
+    <!-- Main Site CSS -->
     <link rel="stylesheet"
           href="~/css/site.css"
           asp-append-version="true" />
 
+    <!-- Layout CSS -->
     <link rel="stylesheet"
           href="~/Duyan.styles.css"
           asp-append-version="true" />
@@ -30,110 +30,91 @@
 
     <div class="app-container">
 
-        <!-- SIDEBAR -->
+        <!-- =====================================
+             LEFT SIDEBAR
+        ====================================== -->
         <aside class="sidebar">
 
+            <!-- Sidebar Header -->
             <div class="sidebar-header">
                 <h4>DUYAN</h4>
-
-                <small>
-                    @if (User.IsInRole("PlatformAdmin"))
-                    {
-                        @:Platform Administration
-                    }
-                    else if (User.IsInRole("HotelManager"))
-                    {
-                        @:Hotel Management
-                    }
-                    else if (User.IsInRole("HotelStaff"))
-                    {
-                        @:Hotel Staff
-                    }
-                </small>
+                <small>Hotel Management System</small>
             </div>
 
+            <!-- Sidebar Navigation -->
             <nav class="sidebar-nav">
 
-                <!-- PLATFORM ADMIN -->
-                @if (User.IsInRole("PlatformAdmin"))
-                {
-                    <a asp-controller="PlatformAdmin"
-                       asp-action="Dashboard"
-                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "Dashboard" ? "active" : "")">
-                        <i class="bi bi-speedometer2"></i>
-                        Dashboard
-                    </a>
-
-                    <a asp-controller="PlatformAdmin"
-                       asp-action="RegistrationRequests"
-                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "RegistrationRequests" ? "active" : "")">
-                        <i class="bi bi-inbox"></i>
-                        Registration Requests
-                    </a>
-
-                    <a asp-controller="PlatformAdmin"
-                       asp-action="HotelManagement"
-                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "HotelManagement" ? "active" : "")">
-                        <i class="bi bi-building"></i>
-                        Hotel Management
-                    </a>
-
-                    
-
-                    <a asp-controller="PlatformAdmin"
-                       asp-action="ActivityLogs"
-                       class="nav-link @(currentController == "PlatformAdmin" && currentAction == "ActivityLogs" ? "active" : "")">
-                        <i class="bi bi-clock-history"></i>
-                        Activity Logs
-                    </a>
-                }
-
-                <!-- HOTEL MANAGER -->
-                else if (User.IsInRole("HotelManager"))
-                {
-                <a asp-controller="HotelManager"
-                   asp-action="Hotel_Manager"
-                   class="nav-link @(currentController == "HotelManager" && currentAction == "Hotel_Manager" ? "active" : "")">
+                <a asp-controller="PlatformAdmin"
+                   asp-action="Dashboard"
+                   class="nav-link">
                     <i class="bi bi-speedometer2"></i>
-                    Dashboard
+                    <span>Dashboard</span>
                 </a>
-                }
 
-                <!-- HOTEL STAFF -->
-                else if (User.IsInRole("HotelStaff"))
-                {
-                <a asp-controller="HotelStaff"
-                   asp-action="Hotel_Staff"
-                   class="nav-link @(currentController == "HotelStaff" && currentAction == "Hotel_Staff" ? "active" : "")">
-                    <i class="bi bi-speedometer2"></i>
-                    Dashboard
+                <a asp-controller="PlatformAdmin"
+                   asp-action="RegistrationRequests"
+                   class="nav-link">
+                    <i class="bi bi-inbox"></i>
+                    <span>Registration Requests</span>
                 </a>
-                }
+
+                <a asp-controller="PlatformAdmin"
+                   asp-action="HotelManagement"
+                   class="nav-link">
+                    <i class="bi bi-building"></i>
+                    <span>Hotel Management</span>
+                </a>
+
+                <a asp-controller="PlatformAdmin"
+                   asp-action="ReportsAnalytics"
+                   class="nav-link">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Reports & Analytics</span>
+                </a>
+
+                <a asp-controller="PlatformAdmin"
+                   asp-action="ActivityLogs"
+                   class="nav-link">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Activity Logs</span>
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Privacy"
+                   class="nav-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>My Profile</span>
+                </a>
 
             </nav>
 
         </aside>
 
 
-        <!-- MAIN AREA -->
+        <!-- =====================================
+             MAIN CONTENT AREA
+        ====================================== -->
         <div class="main-wrapper">
 
-            <!-- TOP NAVBAR -->
+            <!-- Top Navbar -->
             <header class="top-navbar">
 
-                <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
 
+                    <!-- Logged-in User -->
                     <span class="text-muted small">
                         <i class="bi bi-person"></i>
                         @User.Identity?.Name
                     </span>
 
+                    <!-- Logout Button -->
                     <form asp-controller="Account"
                           asp-action="Logout"
                           method="post">
 
                         <button type="submit"
                                 class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-box-arrow-right"></i>
                             Log out
                         </button>
 
@@ -144,9 +125,11 @@
             </header>
 
 
-            <!-- PAGE CONTENT -->
+            <!-- Page Content -->
             <main class="main-content">
+
                 @RenderBody()
+
             </main>
 
         </div>
@@ -154,9 +137,12 @@
     </div>
 
 
-    <!-- SCRIPTS -->
+   
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
