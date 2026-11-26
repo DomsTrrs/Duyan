@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var currentRole = Context.Session.GetString("Role");
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +48,23 @@
             <!-- Sidebar Navigation -->
             <nav class="sidebar-nav">
 
-               
+                @if (currentRole == "Platform Admin")
+                {
+                    <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")"
+                       asp-controller="PlatformAdmin" asp-action="Dashboard">
+                        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                    </a>
+
+                    <a class="nav-link @(currentAction == "HotelManagement" ? "active" : "")"
+                       asp-controller="PlatformAdmin" asp-action="HotelManagement">
+                        <i class="bi bi-building me-2"></i>Hotel Management
+                    </a>
+
+                    <a class="nav-link @(currentAction == "ActivityLogs" ? "active" : "")"
+                       asp-controller="PlatformAdmin" asp-action="ActivityLogs">
+                        <i class="bi bi-journal-text me-2"></i>Activity Logs
+                    </a>
+                }
 
             </nav>
 
