@@ -1,0 +1,60 @@
+﻿@using Duyan.Models.ViewModels
+@model SignUpViewModel
+
+<h1>Sign up</h1>
+<p class="lead-text">Fill in your details to get started.</p>
+
+<form asp-controller="User" asp-action="Create" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row g-3">
+
+        <div class="col-md-6">
+            <label asp-for="Full_name" class="form-label"></label>
+            <input asp-for="Full_name" class="form-control" placeholder="Enter full name" autocomplete="name" />
+            <span asp-validation-for="Full_name" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Email" for="signup_Email" class="form-label"></label>
+            <input asp-for="Email" id="signup_Email" type="email" class="form-control"
+                   placeholder="Enter email" autocomplete="username" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Hotel_id" class="form-label"></label>
+            <input asp-for="Hotel_id" type="number" min="1" class="form-control" placeholder="Enter hotel ID" />
+            <span asp-validation-for="Hotel_id" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Role" class="form-label"></label>
+            <select asp-for="Role" class="form-select">
+                <option value="">Select role</option>
+                <option value="Hotel Staff">Hotel Staff</option>
+                <option value="Hotel Manager">Hotel Manager</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Password" for="signup_Password" class="form-label"></label>
+            <input asp-for="Password" id="signup_Password" type="password" class="form-control"
+                   placeholder="Enter password" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control"
+                   placeholder="Re-enter password" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 d-grid">
+            <button type="submit" class="btn btn-signin">Sign up</button>
+        </div>
+
+    </div>
+</form>

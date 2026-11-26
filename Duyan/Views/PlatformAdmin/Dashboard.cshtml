@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/PlatformAdmin.css" asp-append-version="true" />
+
+<h1 class="h3 page-title mb-1">Platform Dashboard</h1>
+<p class="text-muted mb-4">Sample data only. Real numbers will be connected in the next steps.</p>
+
+@* ---------- Summary cards ---------- *@
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card stat-card-accent border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-building"></i></div>
+                <div class="text-muted small">Registered hotels</div>
+                <div class="stat-value">15</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+                <div class="text-muted small">Active hotels</div>
+                <div class="stat-value">9</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="text-muted small">Pending applications</div>
+                <div class="stat-value">3</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-slash-circle"></i></div>
+                <div class="text-muted small">Suspended / deactivated</div>
+                <div class="stat-value">3</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-person-gear"></i></div>
+                <div class="text-muted small">Hotel administrators</div>
+                <div class="stat-value">12</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-2">
+        <div class="card stat-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-people"></i></div>
+                <div class="text-muted small">Hotel staff</div>
+                <div class="stat-value">48</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    @* ---------- Latest registration requests ---------- *@
+    <div class="col-xl-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white"><strong>Latest registration requests</strong></div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>Hotel</th><th>Applicant</th><th>Submitted</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="fw-semibold">Sample Hotel A</div><div class="small text-muted">Mandaue City, Cebu</div></td>
+                            <td>Juan Dela Cruz<div class="small text-muted">juan@example.com</div></td>
+                            <td class="text-nowrap">Nov 24, 2026</td>
+                        </tr>
+                        <tr>
+                            <td><div class="fw-semibold">Sample Hotel B</div><div class="small text-muted">Cebu City</div></td>
+                            <td>Maria Santos<div class="small text-muted">maria@example.com</div></td>
+                            <td class="text-nowrap">Nov 22, 2026</td>
+                        </tr>
+                        <tr>
+                            <td><div class="fw-semibold">Sample Hotel C</div><div class="small text-muted">Lapu-Lapu City</div></td>
+                            <td>Pedro Reyes<div class="small text-muted">pedro@example.com</div></td>
+                            <td class="text-nowrap">Nov 20, 2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* ---------- Recent activity ---------- *@
+    <div class="col-xl-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white"><strong>Recent activity</strong></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div><strong>Platform Administrator</strong> - Approved hotel registration</div>
+                    <div class="small text-muted">Sample Hotel D</div>
+                    <div class="small text-muted">Nov 23, 2026 2:15 PM</div>
+                </li>
+                <li class="list-group-item">
+                    <div><strong>Platform Administrator</strong> - Suspended hotel account</div>
+                    <div class="small text-muted">Sample Hotel E</div>
+                    <div class="small text-muted">Nov 21, 2026 9:40 AM</div>
+                </li>
+                <li class="list-group-item">
+                    <div><strong>Platform Administrator</strong> - Created Hotel Administrator account</div>
+                    <div class="small text-muted">Sample Hotel F</div>
+                    <div class="small text-muted">Nov 19, 2026 4:05 PM</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
