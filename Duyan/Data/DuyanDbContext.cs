@@ -12,5 +12,6 @@ namespace Duyan.Data
         }
 
         public DbSet<User> User { get; set; }
+        public DbSet<Hotel> Hotel { get; internal set; }
     }
 }

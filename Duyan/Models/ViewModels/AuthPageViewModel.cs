@@ -5,7 +5,6 @@
     {
         public LoginViewModel Login { get; set; } = new LoginViewModel();
         public SignUpViewModel SignUp { get; set; } = new SignUpViewModel();
-        public PlatformAdminViewModel Admin { get; set; } = new PlatformAdminViewModel();
 
         public bool ShowSignUp { get; set; } = false;
     }

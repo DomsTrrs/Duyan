@@ -1,4 +1,5 @@
-﻿<div class="modal fade" id="registerHotelModal" tabindex="-1"
+﻿
+<div class="modal fade" id="registerHotelModal" tabindex="-1"
      aria-labelledby="registerHotelModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -10,7 +11,10 @@
 
             @* TODO (next step): add asp-controller="PlatformAdmin" asp-action="RegisterHotel" and change
                the Register button below to type="submit" once the RegisterHotel action exists. *@
-            <form id="registerHotelForm" method="post">
+
+
+            <form asp-controller="Hotel" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
 
                     <h6 class="fw-bold mb-3">Hotel details</h6>
@@ -19,9 +23,13 @@
                             <label for="hotelName" class="form-label">Hotel name</label>
                             <input type="text" id="hotelName" name="Hotel_name" class="form-control" required />
                         </div>
-                        <div class="col-12">
+                        <div class="col-md-8">
                             <label for="hotelAddress" class="form-label">Address</label>
                             <input type="text" id="hotelAddress" name="Address" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hotelCity" class="form-label">City</label>
+                            <input type="text" id="hotelCity" name="City" class="form-control" required />
                         </div>
                         <div class="col-md-6">
                             <label for="hotelContact" class="form-label">Contact number</label>
@@ -29,29 +37,35 @@
                         </div>
                         <div class="col-md-6">
                             <label for="hotelEmail" class="form-label">Hotel email</label>
-                            <input type="email" id="hotelEmail" name="Contact_email" class="form-control" required />
+                            <input type="email" id="hotelEmail" name="email" class="form-control" required />
                         </div>
                     </div>
 
-                    <h6 class="fw-bold mb-3">Hotel administrator account</h6>
+                    <h6 class="fw-bold mb-3">Check-in / check-out</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="hotelCheckIn" class="form-label">Check-in time</label>
+                            <input type="time" id="hotelCheckIn" name="Check_in_time" class="form-control"
+                                   value="14:00" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hotelCheckOut" class="form-label">Check-out time</label>
+                            <input type="time" id="hotelCheckOut" name="Check_out_time" class="form-control"
+                                   value="12:00" required />
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3">Profile details <span class="text-muted fw-normal">(optional)</span></h6>
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="adminName" class="form-label">Full name</label>
-                            <input type="text" id="adminName" name="Admin_full_name" class="form-control" required />
+                        <div class="col-12">
+                            <label for="hotelAmenities" class="form-label">Amenities</label>
+                            <textarea id="hotelAmenities" name="Amenities" class="form-control" rows="2"
+                                      placeholder="e.g. Pool, Free Wi-Fi, Gym, Breakfast"></textarea>
                         </div>
-                        <div class="col-md-6">
-                            <label for="adminEmail" class="form-label">Email</label>
-                            <input type="email" id="adminEmail" name="Admin_email" class="form-control" required />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="adminPassword" class="form-label">Password</label>
-                            <input type="password" id="adminPassword" name="Admin_password"
-                                   class="form-control" autocomplete="new-password" required />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="adminConfirm" class="form-label">Confirm password</label>
-                            <input type="password" id="adminConfirm" name="Admin_confirm_password"
-                                   class="form-control" autocomplete="new-password" required />
+                        <div class="col-12">
+                            <label for="hotelPolicies" class="form-label">Policies</label>
+                            <textarea id="hotelPolicies" name="Policies" class="form-control" rows="3"
+                                      placeholder="e.g. Cancellation, pets, smoking, extra guests"></textarea>
                         </div>
                     </div>
 
@@ -59,7 +73,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Register hotel</button>
+                    <button type="submit" class="btn btn-primary">Register hotel</button>
                 </div>
             </form>
 

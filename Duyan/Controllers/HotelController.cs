@@ -1,83 +1,125 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Duyan.Data;
+using Duyan.Models;
+using Duyan.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Duyan.Controllers
 {
     public class HotelController : Controller
     {
-        // GET: HotelController
-        public ActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HotelController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        // GET: HotelController/Details/5
-        public ActionResult Details(int id)
+        // GET: Hotel/Create
+        public IActionResult Create()
         {
-            return View();
+            return RedirectToAction("HotelManagement", "PlatformAdmin");
         }
 
-        // GET: HotelController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HotelController/Create
+        // POST: Hotel/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(HotelManagementViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View("~/Views/PlatformAdmin/HotelManagement.cshtml", model);
             }
-            catch
+
+            var hotel_name = model.Hotel_name.Trim();
+
+            if (await _context.Hotel.AnyAsync(h => h.Hotel_name.ToLower() == hotel_name.ToLower()))
             {
-                return View();
+                ModelState.AddModelError("Hotel_name", "Hotel name already exists.");
+                return View("~/Views/PlatformAdmin/HotelManagement.cshtml", model);
             }
+
+            var hotel = new Hotel
+            {
+                Hotel_name = hotel_name,
+                Address = model.Address,
+                City = model.City,
+                Contact_number = model.Contact_number,
+                email = model.email,
+                Check_in_time = model.Check_in_time,
+                Check_out_time = model.Check_out_time,
+                Policies = model.Policies,
+                Amenities = model.Amenities,
+                Status = HotelStatus.Pending,
+                created_at = DateTime.UtcNow
+            };
+
+            _context.Hotel.Add(hotel);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("HotelManagement", "PlatformAdmin");
         }
 
-        // GET: HotelController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: HotelController/Edit/5
+        // POST: Hotel/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Hotel hotel)
         {
-            try
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(hotel.Hotel_name))
             {
-                return RedirectToAction(nameof(Index));
+                TempData["Error"] = "Please fill in all required fields.";
+                return RedirectToAction("HotelManagement", "PlatformAdmin");
             }
-            catch
+
+            var hotel_name = hotel.Hotel_name.Trim();
+
+            // Does another hotel already use this name?
+            bool nameTaken = await _context.Hotel.AnyAsync(h =>
+                h.Hotel_name.ToLower() == hotel_name.ToLower() &&
+                h.Hotel_id != hotel.Hotel_id);
+
+            if (nameTaken)
             {
-                return View();
+                TempData["Error"] = "Hotel name already exists.";
+                return RedirectToAction("HotelManagement", "PlatformAdmin");
             }
+
+            var dbHotel = await _context.Hotel.FindAsync(hotel.Hotel_id);
+
+            if (dbHotel == null)
+            {
+                return NotFound();
+            }
+
+            dbHotel.Hotel_name = hotel_name;
+            dbHotel.Address = hotel.Address;
+            dbHotel.City = hotel.City;
+            dbHotel.Contact_number = hotel.Contact_number;
+            dbHotel.email = hotel.email;
+            dbHotel.Check_in_time = hotel.Check_in_time;
+            dbHotel.Check_out_time = hotel.Check_out_time;
+            dbHotel.Policies = hotel.Policies;
+            dbHotel.Amenities = hotel.Amenities;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("HotelManagement", "PlatformAdmin");
         }
 
-        // GET: HotelController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HotelController/Delete/5
+        // POST: Hotel/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int Hotel_id)
         {
-            try
+            var hotel = await _context.Hotel.FindAsync(Hotel_id);
+
+            if (hotel != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Hotel.Remove(hotel);
+                await _context.SaveChangesAsync();
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction("HotelManagement", "PlatformAdmin");
         }
     }
 }

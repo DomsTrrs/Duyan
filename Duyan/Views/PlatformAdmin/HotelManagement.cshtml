@@ -1,4 +1,7 @@
-﻿@{
+﻿@model IEnumerable<Duyan.Models.Hotel>
+@using Duyan.Models
+
+@{
     ViewData["Title"] = "Hotel Management";
     Layout = "_Layout";
 }
@@ -17,14 +20,14 @@
     </button>
 </div>
 
-@* ---------- Summary cards (empty) ---------- *@
+@* ---------- Summary cards ---------- *@
 <div class="row g-3 mb-4">
     <div class="col-12 col-md-4">
         <div class="card stat-card stat-card-accent border-0 shadow-sm h-100">
             <div class="card-body">
                 <div class="stat-icon"><i class="bi bi-building"></i></div>
                 <div class="text-muted small">Registered</div>
-                <div class="stat-value">&ndash;</div>
+                <div class="stat-value">@Model.Count()</div>
             </div>
         </div>
     </div>
@@ -33,7 +36,7 @@
             <div class="card-body">
                 <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
                 <div class="text-muted small">Active</div>
-                <div class="stat-value">&ndash;</div>
+                <div class="stat-value">@Model.Count(h => h.Status == HotelStatus.Active)</div>
             </div>
         </div>
     </div>
@@ -42,13 +45,13 @@
             <div class="card-body">
                 <div class="stat-icon"><i class="bi bi-slash-circle"></i></div>
                 <div class="text-muted small">Suspended / Deactivated</div>
-                <div class="stat-value">&ndash;</div>
+                <div class="stat-value">@Model.Count(h => h.Status == HotelStatus.Suspended || h.Status == HotelStatus.Deactivated)</div>
             </div>
         </div>
     </div>
 </div>
 
-@* ---------- Registered Hotels table (empty) ---------- *@
+@* ---------- Registered Hotels table ---------- *@
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white"><strong>Registered Hotels</strong></div>
     <div class="table-responsive">
@@ -64,7 +67,30 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td colspan="6" class="text-center text-muted py-5">No data yet</td></tr>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-5">No data yet</td></tr>
+                }
+                else
+                {
+                    foreach (var hotel in Model)
+                    {
+                        <tr>
+                            <td>@hotel.Hotel_name</td>
+                            <td>@hotel.Address, @hotel.City</td>
+                            <td>
+                                @hotel.Contact_number<br />
+                                <small class="text-muted">@hotel.email</small>
+                            </td>
+                            <td class="text-muted">&ndash;</td>
+                            <td><span class="badge text-bg-secondary">@hotel.Status</span></td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>

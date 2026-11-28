@@ -5,8 +5,6 @@ namespace Duyan.Views.PlatformAdmin
 {
     public class _RegisterHotelModalModel : PageModel
     {
-        public void OnGet()
-        {
-        }
+
     }
 }
